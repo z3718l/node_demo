@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>node+html</title>
+    <script src='https://code.jquery.com/jquery-3.4.1.min.js'></script>
+    <script src="./index.js"></script>
+</head>
+<body>
+    <div>node+html实现增删改查</div>
+    <div>
+        <div>
+            <input id="username" type="text" placeholder="姓名"/>
+        </div>
+        <div>
+            <input id="birthday" type="text" placeholder="出生"/>
+        </div>
+        <div>
+            <input id="gender" type="text" placeholder="性别"/>
+        </div>
+        <button onclick="postRequest()">提交插入</button>
+    </div>
+    <div>
+        <div>
+            <input id="id" type="number" placeholder="id"/>
+        </div>
+        <div>
+            <input id="usernameput" type="text" placeholder="姓名"/>
+        </div>
+        <div>
+            <input id="birthdayput" type="text" placeholder="出生"/>
+        </div>
+        <div>
+            <input id="genderput" type="text" placeholder="性别"/>
+        </div>
+        <button onclick="putRequest()">提交更新</button>
+    </div>
+    <div>
+        <div>
+            <input id="iddelete" type="number" placeholder="id"/>
+        </div>
+        <button onclick="deleteRequest()">提交删除</button>
+    </div>
+    <div>
+        <button onclick="getRequest()">提交查询</button>
+    </div>
+    <div>
+        <!-- 展示所有学生信息 -->
+       <table id="table">
+        <tr>
+            <th>编号</th>
+            <th>姓名</th>
+            <th>出生日期</th>
+            <th>性别</th>
+        </tr>
+       </table>
+    </div>
+</body>
+<script>
+    // 查询数据
+    function getRequest() {
+        $.get({
+            url: 'http://127.0.0.1:3001/getData',
+            type: 'get',
+            success: function(data) {
+                var item;
+                data.data.forEach((iten, result) => {
+                    item = "<tr><td>" + iten.id + "</td><td>" + iten.name + "</td><td>" + iten.birthday + "</td><td>" + iten.gender +"</td></tr>"
+                    $('#table').append(item);
+                })
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        })
+    }
+    // 插入数据
+    var username = document.getElementById('username')
+    var birthday = document.getElementById('birthday')
+    var gender = document.getElementById('gender')
+    function postRequest() {
+        let data = {
+            name: username.value,
+            birthday: birthday.value,
+            gender: gender.value
+        }
+        $.post({
+            url: 'http://127.0.0.1:3001/insterData',
+            type: 'POST',
+            data: data,
+            dataType : "json",
+            success: function(data) {
+                console.log(data)
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        })
+    }
+
+    // 更新数据
+    var id = document.getElementById('id')
+    var usernameput = document.getElementById('usernameput')
+    var birthdayput = document.getElementById('birthdayput')
+    var genderput = document.getElementById('genderput')
+    function putRequest() {
+        let data = {
+            id: id.value,
+            name: usernameput.value,
+            birthday: birthdayput.value,
+            gender: genderput.value
+        }
+        $.post({
+            url: 'http://127.0.0.1:3001/updateData',
+            type: 'PUT',
+            data: data,
+            dataType : "json",
+            success: function(data) {
+                console.log(data)
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        })
+    }
+
+    // 删除数据
+    var iddelete = document.getElementById('iddelete')
+    function deleteRequest() {
+        let data = {
+            id: iddelete.value
+        }
+        console.log(data)
+        $.post({
+            url: `http://127.0.0.1:3001/delete`,
+            type: 'POST',
+            data: data,
+            dataType : "json",
+            success: function(data) {
+                console.log(data)
+            },
+            error: function(data) {
+                console.log(data)
+            }
+        })
+    }
+</script>
+</html>
