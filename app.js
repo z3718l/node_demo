@@ -33,7 +33,7 @@ app.get('/', (req, res, next) => {
     connection.query(`SELECT * FROM test.t_sudent`, function(error, results, fields) {
         if (error) {
             console.log('错误：', error)
-            return
+            throw new Error('BROKEN')
         }
         // console.log(results, '===results') // 获取sql查询结果
         // console.log(fields, '===fields')
@@ -51,7 +51,7 @@ app.get('/getData', (req, res, next) => {
     connection.query(`SELECT * FROM test.t_sudent`, function(error, results, fields) {
         if (error) {
             console.log('错误：', error)
-            return
+            throw new Error('获取数据错误！')
         }
         // console.log(results, '===results') // 获取sql查询结果
         // console.log(fields, '===fields')
@@ -87,7 +87,7 @@ app.post('/insterData',urlencodedParser, (req, res, next) => {
         gender: josn.gender
     }
     var query = connection.query('INSERT INTO t_sudent SET ?', post, function (error, results, fields) {
-        if (error) throw error;
+        if (error) throw new Error('插入数据错误');
         return res.json({
             msg: '插入成功'
         })
@@ -103,7 +103,7 @@ app.put('/updateData', urlencodedParser, (req, res, next) => {
     let josn = JSON.parse(jsons)
     console.log(josn, '==json')
     var updateQuery = connection.query(`UPDATE t_sudent SET name = '${josn.name}', birthday='${josn.birthday}', gender='${josn.gender}' WHERE id = ${josn.id}`,function(error) {
-        if (error) throw error;
+        if (error) throw new Error('更新数据错误');
         return res.json({
             msg: '更新成功'
         })
@@ -115,7 +115,7 @@ app.post('/delete', urlencodedParser, (req, res, next) => {
     let josn = JSON.parse(jsons)
     console.log(josn, '==json')
     var deleteQuery = connection.query(`DELETE FROM t_sudent WHERE id = ${josn.id}`, function(error) {
-        if (error) throw error;
+        if (error) throw new Error('删除数据错误');
         return res.json({
             msg: '删除成功'
         })
