@@ -2,6 +2,10 @@ var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
 var request = require('request')
+
+var indexCol = require('./controller/index')
+
+
 // 添加容错机制
 // app.use(bodyParser.json())
 // app.use(express.bodyParser())
@@ -29,6 +33,9 @@ app.all('*', (req, res, next) => {
     res.header("Content-Type", "application/json;charset=utf-8")
     next()
 })
+
+indexCol.init(app)
+
 app.get('/', (req, res, next) => {
     connection.query(`SELECT * FROM test.t_sudent`, function(error, results, fields) {
         if (error) {
@@ -43,9 +50,7 @@ app.get('/', (req, res, next) => {
         })
     })
 })
-app.get('/test', (req, res, next) => {
-    res.send('Hello Word')
-})
+
 // 查询数据
 app.get('/getData', (req, res, next) => {
     connection.query(`SELECT * FROM test.t_sudent`, function(error, results, fields) {
@@ -124,11 +129,11 @@ app.post('/delete', urlencodedParser, (req, res, next) => {
 
 
 // node实现简单的爬虫
-request('https://www.huipiaoxian.com/', function (error, response, body) {
-  console.error('error:', error); // Print the error if one occurred
-  console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-  console.log('body:', body); // Print the HTML for the Google homepage.
-});
+// request('https://www.huipiaoxian.com/', function (error, response, body) {
+//   console.error('error:', error); // Print the error if one occurred
+//   console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+//   console.log('body:', body); // Print the HTML for the Google homepage.
+// });
 
 app.listen(3001, () => {
     console.log('node is ok')
