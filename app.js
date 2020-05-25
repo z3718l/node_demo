@@ -2,7 +2,8 @@ var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
 var request = require('request')
-
+const jwt = require('jsonwebtoken')
+const config = require('./jwtConfig')
 var indexCol = require('./controller/index')
 
 
@@ -84,17 +85,24 @@ app.post('/insterData',urlencodedParser, (req, res, next) => {
     //         data: results
     //     })
     // })
-    let ids = 26
+    let ids = 28
     var post  = {
         id: ++ids, 
         name: josn.name,
         birthday: josn.birthday,
         gender: josn.gender
     }
+    const token = jwt.sign({
+        // id: 28,
+        name: josn.name,
+        birthday: josn.birthday,
+    },config.jwtSecret)
+    console.log(token, '===token')
     var query = connection.query('INSERT INTO t_sudent SET ?', post, function (error, results, fields) {
         if (error) throw new Error('插入数据错误');
         return res.json({
-            msg: '插入成功'
+            msg: '插入成功',
+            token: token
         })
     });
     // var response = {
